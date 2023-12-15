@@ -1,0 +1,78 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+import codecs
+import sys
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--bytes", action="store_true", help="Will print the size of the file in bytes")
+parser.add_argument("-l", "--lines", action="store_true", help="Will print the number of lines")
+parser.add_argument("-w", "--words", action="store_true", help="Will print the number of words")
+parser.add_argument("-m", "--chars", action="store_true", help="Will print the number of characters")
+parser.add_argument("filename", nargs="?", default=sys.stdin)
+
+args = parser.parse_args()
+
+bytes = ""
+lines = ""
+words = ""
+chars = ""
+if type(args.filename) == str:
+	with codecs.open(args.filename, "r", "utf-8") as file:
+		lineCount = int(0)
+		wordCount = int(0)
+		charCount = int(0)
+		for line in file:
+			lineCount = lineCount + 1
+			wordsInEachLine = line.split()
+			wordCount = wordCount + len(wordsInEachLine)
+			charCount = charCount + len(line)
+		bytes = "[" + str(os.path.getsize(args.filename)) + " bytes] "
+		lines = "[" + str(lineCount) + " lines] "
+		words = "[" + str(wordCount) + " words] "
+		chars = "[" + str(charCount) + " chars] "
+		if args.bytes == args.lines == args.words == args.chars == False:
+			print(lines + words + bytes + args.filename)
+		else:
+			# If an option is give, build output string
+			optionsString = ""
+			if args.lines == True: optionsString += lines
+			if args.words == True: optionsString += words
+			if args.chars == True: optionsString += chars
+			if args.bytes == True: optionsString += bytes
+			print(optionsString + args.filename)
+else:
+	try:
+		lineCount = int(0)
+		wordCount = int(0)
+		charCount = int(0)
+		bytesCount = int(0)
+		input_readlines = sys.stdin.buffer.readlines()
+		for line in input_readlines:
+			lineCount = lineCount + 1
+			wordsInEachLine = line.split()
+			wordCount = wordCount + len(wordsInEachLine)
+			charCount = charCount + len(line.decode("utf-8"))
+			bytesCount = bytesCount + len(line)
+			#print(line.decode("utf-8"))
+		bytes = "[" + str(bytesCount) + " bytes] "
+		lines = "[" + str(lineCount) + " lines] "
+		words = "[" + str(wordCount) + " words] "
+		chars = "[" + str(charCount) + " chars] "
+
+		if args.bytes == args.lines == args.words == args.chars == False:
+			print(lines + words + bytes)
+		else:
+			# If an option is give, build output string
+			optionsString = ""
+			if args.lines == True: optionsString += lines
+			if args.words == True: optionsString += words
+			if args.chars == True: optionsString += chars
+			if args.bytes == True: optionsString += bytes
+			print(optionsString)
+	except KeyboardInterrupt:
+		print("ancelled by user")
+
