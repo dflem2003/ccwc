@@ -2,7 +2,7 @@
 
 import argparse
 import os
-import codecs
+#import codecs
 import sys
 
 
@@ -21,7 +21,10 @@ lines = ""
 words = ""
 chars = ""
 if type(args.filename) == str:
-	with codecs.open(args.filename, "r", "utf-8") as file:
+	
+	
+	
+	with open(args.filename, "rb") as file:
 		lineCount = int(0)
 		wordCount = int(0)
 		charCount = int(0)
@@ -29,7 +32,10 @@ if type(args.filename) == str:
 			lineCount = lineCount + 1
 			wordsInEachLine = line.split()
 			wordCount = wordCount + len(wordsInEachLine)
-			charCount = charCount + len(line)
+			try:
+				charCount = charCount + len(str(line.decode("utf-8")))
+			except :	
+				charCount = charCount + len(line)
 		bytes = "[" + str(os.path.getsize(args.filename)) + " bytes] "
 		lines = "[" + str(lineCount) + " lines] "
 		words = "[" + str(wordCount) + " words] "
@@ -55,7 +61,10 @@ else:
 			lineCount = lineCount + 1
 			wordsInEachLine = line.split()
 			wordCount = wordCount + len(wordsInEachLine)
-			charCount = charCount + len(line.decode("utf-8"))
+			try:
+				charCount = charCount + len(str(line.decode("utf-8")))
+			except :	
+				charCount = charCount + len(line)
 			bytesCount = bytesCount + len(line)
 			#print(line.decode("utf-8"))
 		bytes = "[" + str(bytesCount) + " bytes] "
@@ -75,4 +84,3 @@ else:
 			print(optionsString)
 	except KeyboardInterrupt:
 		print("ancelled by user")
-
